@@ -1,25 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { ContextProvider } from './context/colorsContext';
+
+import Navbar from './components/Navbar';
+
+const ColorSelected = lazy(()=> import('./pages/ColorDetails'));
+const ColorsSimple = lazy(()=> import('./pages/ColorsSimple'));
+const ColorsDeg = lazy(()=> import('./pages/ColorsDeg'));
+const Home = lazy(()=> import('./pages/Home'));
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router>
+        <Navbar />
+
+        <ContextProvider>
+          <Suspense fallback={<div> Cargando... </div>}>
+            <Switch>
+              <Route path="/color/:id" component={ColorSelected}/>
+              <Route path="/colors-simple" component={ColorsSimple} />
+              <Route path="/colors-deg" component={ColorsDeg} /> 
+              <Route path="/" component={Home} />
+            </Switch>
+          </Suspense>
+        </ContextProvider>
+      </Router>
   );
 }
 
